@@ -1,0 +1,41 @@
+# Comentarios
+    /*
+    Plugin Name: DAM experimento
+    Plugin URI: http://www.danielcastelao.org/
+    Description: Experimentación de varias técnicas para hacer un plugin
+    Version: 1.0
+
+Estos comentarios iniciales son metadatos del plugin y se utilizan para describir y etiquetar el plugin. El nombre, descripción, versión y autor
+
+# Definición de palabras para remplazar
+
+    $palabras_a_reemplazar = array(
+        'papanatas' => 'GunGin',
+        'recorcholis' => 'GinGun',
+        'panplinas' => 'GunGan',
+        'rayos y centellas' => 'GanGun',
+        'caspita' => 'GinGin',
+    );
+
+Aqui creamos una array coon todas las palabras a reempalzar
+
+# Hook para el filtrado
+
+    add_filter('content_save_pre', 'filtrar_palabras_en_post');
+
+Se utiliza el hook content_save_pre, que se dispara justo antes de que el contenido del post se guarde en la base de datos. El hook está configurado para llamar a la función filtrar_palabras_en_post cuando se activa.
+
+# Función para filtrar palabras
+
+    function filtrar_palabras_en_post($content) {
+        global $palabras_a_reemplazar;
+
+        // Recorre el array de palabras a reemplazar y realiza el reemplazo en el contenido del post
+        foreach ($palabras_a_reemplazar as $palabra_original => $palabra_reemplazo) {
+            $content = str_ireplace($palabra_original, $palabra_reemplazo, $content);
+        }
+
+        return $content;
+    }
+
+Una función que que mira las palabras del POST y las filtra por si hay alguna de las correspondientes y las cambia por otras
