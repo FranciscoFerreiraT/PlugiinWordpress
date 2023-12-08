@@ -1,41 +1,19 @@
-# Comentarios
-    /*
-    Plugin Name: DAM experimento
-    Plugin URI: http://www.danielcastelao.org/
-    Description: Experimentación de varias técnicas para hacer un plugin
-    Version: 1.0
+# Función para obtener las palabras desde la base de datos
 
-Estos comentarios iniciales son metadatos del plugin y se utilizan para describir y etiquetar el plugin. El nombre, descripción, versión y autor
+    function obtener_palabras_desde_bd() {
+        global $wpdb;
+        $tabla_palabras = $wpdb->prefix . 'mis_palabras'; // Reemplaza 'mis_palabras' con el nombre real de tu tabla en la base de datos
 
-# Definición de palabras para remplazar
+        // Realiza la consulta SQL para obtener las palabras
+        $query = "SELECT palabra_original, palabra_reemplazo FROM $tabla_palabras";
+        $resultados = $wpdb->get_results($query, ARRAY_A);
 
-    $palabras_a_reemplazar = array(
-        'papanatas' => 'GunGin',
-        'recorcholis' => 'GinGun',
-        'panplinas' => 'GunGan',
-        'rayos y centellas' => 'GanGun',
-        'caspita' => 'GinGin',
-    );
-
-Aqui creamos una array coon todas las palabras a reempalzar
-
-# Hook para el filtrado
-
-    add_filter('content_save_pre', 'filtrar_palabras_en_post');
-
-Se utiliza el hook content_save_pre, que se dispara justo antes de que el contenido del post se guarde en la base de datos. El hook está configurado para llamar a la función filtrar_palabras_en_post cuando se activa.
-
-# Función para filtrar palabras
-
-    function filtrar_palabras_en_post($content) {
-        global $palabras_a_reemplazar;
-
-        // Recorre el array de palabras a reemplazar y realiza el reemplazo en el contenido del post
-        foreach ($palabras_a_reemplazar as $palabra_original => $palabra_reemplazo) {
-            $content = str_ireplace($palabra_original, $palabra_reemplazo, $content);
+        $palabras_a_reemplazar = array();
+        foreach ($resultados as $fila) {
+            $palabras_a_reemplazar[$fila['palabra_original']] = $fila['palabra_reemplazo'];
         }
 
-        return $content;
+        return $palabras_a_reemplazar;
     }
-
-Una función que que mira las palabras del POST y las filtra por si hay alguna de las correspondientes y las cambia por otras
+    
+Con esta funcion obtenemos las palabras que queremos cambiar desde una base de datos utilizando wpdb y luego hacemos una consulta SQL para hacer el filtrado
